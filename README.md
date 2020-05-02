@@ -7,3 +7,7 @@ Custom (private) website for client that allows them to keep track of their work
 ### Prerequisites
 
 ### Installing
+
+### Todo
+
+- [x]
