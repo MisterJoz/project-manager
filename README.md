@@ -9,5 +9,3 @@ Custom (private) website for client that allows them to keep track of their work
 ### Installing
 
 ### Todo
-
-- [x]
