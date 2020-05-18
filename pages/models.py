@@ -2,6 +2,8 @@ from django.db import models
 from datetime import datetime, date
 from django.db import models
 from phone_field import PhoneField
+from django.utils import timezone
+
 # Create your models here.
 
 
@@ -37,12 +39,12 @@ class Project(models.Model):
     deposit_amount = models.IntegerField(null=True, blank=True, default=0)
     completion_amount = models.IntegerField(null=True, blank=True, default=0)
     final_total = models.IntegerField(null=True, blank=True, default=0)
-    initial_date = models.DateField(
-        auto_now_add=False, auto_now=False, blank=True)
-    survey_date = models.DateField(
-        auto_now_add=False, auto_now=False, blank=True)
-    approval_date = models.DateField(
-        auto_now_add=False, auto_now=False, blank=True)
+    intial_date = models.DateField(
+        default=timezone.now, auto_now_add=False, auto_now=False, blank=True)
+    survey_date = models.DateField(null=True,
+                                   default=timezone.now, auto_now_add=False, auto_now=False, blank=True)
+    approval_date = models.DateField(null=True,
+                                     default=timezone.now, auto_now_add=False, auto_now=False, blank=True)
     sign_permit_details = models.TextField(null=True, blank=True)
     landlord_approval_details = models.TextField(null=True, blank=True)
     artwork_approved = models.BooleanField(
@@ -54,14 +56,14 @@ class Project(models.Model):
         max_length=200, null=True, blank=True)
     electrician_name = models.CharField(max_length=200, null=True, blank=True)
     turnaround_time = models.DateField(
-        auto_now_add=False, auto_now=False, null=True, blank=True)
+        default=timezone.now, auto_now_add=False, auto_now=False, null=True, blank=True)
     actual_installation = models.DateField(
-        auto_now_add=False, auto_now=False,  null=True, blank=True)
+        default=timezone.now, auto_now_add=False, auto_now=False,  null=True, blank=True)
     production_notes = models.TextField(null=True, blank=True)
     installation_date = models.DateField(
-        auto_now_add=False, auto_now=False, null=True, blank=True)
+        default=timezone.now, auto_now_add=False, auto_now=False, null=True, blank=True)
     date_of_completion = models.DateField(
-        auto_now_add=False, auto_now=False, null=True, blank=True)
+        default=timezone.now, auto_now_add=False, auto_now=False, null=True, blank=True)
     job_description = models.TextField(null=True, blank=True)
     special_colors_materials = models.TextField(null=True, blank=True)
 

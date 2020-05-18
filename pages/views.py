@@ -14,7 +14,7 @@ from .forms import ProjectForm, ContactForm, CreateUserForm
 
 
 @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin'])
 def index(request):
     projects = Project.objects.all()
     context = {
@@ -44,7 +44,7 @@ def register(request):
     return render(request, 'pages/register.html', context)
 
 
-@unauthenticated_user
+# @unauthenticated_user
 def loginPage(request):
 
     if request.method == 'POST':
@@ -134,10 +134,11 @@ def project(request, pk):
 @allowed_users(allowed_roles=['admin'])
 def updateProject(request, pk):
     project = Project.objects.get(id=pk)
+    print('Project...', project)
     form = ProjectForm(instance=project)
 
     if request.method == 'POST':
-        form = ProjectForm(request, instance=project)
+        form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             form.save()
             return redirect('/')
