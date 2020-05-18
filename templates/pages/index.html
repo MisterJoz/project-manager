@@ -7,7 +7,7 @@
 
     <!-- Jumbotron Header -->
     <header class="jumbotron my-4">
-      <h1 class="display-3">Welcome, Gracie!</h1>
+      <h1 class="display-3">Welcome, {{request.user}}</h1>
       <p class="lead">Your project manager.</p>
       <a href="{% url 'add_project' %}" class="btn btn-primary btn-lg">Add Project</a>
       <a href="{% url 'add_contact' %}" class="btn btn-primary btn-lg">Add Contact</a>

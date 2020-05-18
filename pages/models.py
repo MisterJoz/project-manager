@@ -37,7 +37,7 @@ class Project(models.Model):
     deposit_amount = models.IntegerField(null=True, blank=True, default=0)
     completion_amount = models.IntegerField(null=True, blank=True, default=0)
     final_total = models.IntegerField(null=True, blank=True, default=0)
-    intial_date = models.DateField(
+    initial_date = models.DateField(
         auto_now_add=False, auto_now=False, blank=True)
     survey_date = models.DateField(
         auto_now_add=False, auto_now=False, blank=True)

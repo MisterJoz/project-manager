@@ -1,10 +1,20 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+
+from .decorators import unauthenticated_user, allowed_users
 from .models import *
-from .forms import ProjectForm, ContactForm
+from .forms import ProjectForm, ContactForm, CreateUserForm
 # Create your views here.
 
 
+@login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin'])
 def index(request):
     projects = Project.objects.all()
     context = {
@@ -13,8 +23,48 @@ def index(request):
     return render(request, 'pages/index.html', context)
 
 
+@unauthenticated_user
 def register(request):
-    return render(request, 'pages/register.html')
+
+    form = CreateUserForm()
+
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # associate user with admin group upon registration
+            username = form.cleaned_data.get('username')
+            group = Group.objects.get(name='admin')
+            user.groups.add(group)
+
+            messages.success(request, 'Account was created for ' + username)
+            return redirect('login')
+
+    context = {'form': form}
+    return render(request, 'pages/register.html', context)
+
+
+@unauthenticated_user
+def loginPage(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.info(request, 'Username OR password is incorrenct')
+    context = {}
+    return render(request, 'pages/login.html', context)
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
 
 
 def calculate(subtotal, no_of_signs, sign_permit, engineering, other_fees, discount, cash_discount):
@@ -26,6 +76,8 @@ def calculate(subtotal, no_of_signs, sign_permit, engineering, other_fees, disco
     return total
 
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def addProject(request):
     form = ProjectForm()
     if request.method == 'POST':
@@ -57,6 +109,8 @@ def addProject(request):
     return render(request, 'pages/add_project_form.html', context)
 
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def addContact(request):
     form = ContactForm()
     if request.method == 'POST':
@@ -76,6 +130,8 @@ def project(request, pk):
     return render(request, 'pages/project.html', context)
 
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def updateProject(request, pk):
     project = Project.objects.get(id=pk)
     form = ProjectForm(instance=project)
@@ -92,6 +148,8 @@ def updateProject(request, pk):
     return render(request, 'pages/add_project_form.html', context)
 
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def deleteProject(request, pk):
     project = Project.objects.get(id=pk)
     if request.method == "POST":
