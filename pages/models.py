@@ -3,6 +3,7 @@ from datetime import datetime, date
 from django.db import models
 from phone_field import PhoneField
 from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -36,9 +37,14 @@ class Project(models.Model):
     discount = models.FloatField(null=True, blank=True, default=0)
     cash_discount = models.IntegerField(null=True, blank=True, default=0)
     discount_total = models.IntegerField(null=True, blank=True, default=0)
-    deposit_amount = models.IntegerField(null=True, blank=True, default=0)
-    completion_amount = models.IntegerField(null=True, blank=True, default=0)
     final_total = models.IntegerField(null=True, blank=True, default=0)
+    deposit_percentage = models.IntegerField(null=True, blank=True, default=0, validators=[
+                                             MaxValueValidator(100), MinValueValidator(0)])
+    deposit_amount = models.IntegerField(null=True, blank=True, default=0)
+    completion_percentage = models.IntegerField(
+        null=True, blank=True, default=0, validators=[
+            MaxValueValidator(100), MinValueValidator(0)])
+    completion_amount = models.IntegerField(null=True, blank=True, default=0, )
     intial_date = models.DateField(
         default=timezone.now, auto_now_add=False, auto_now=False, blank=True)
     survey_date = models.DateField(null=True,

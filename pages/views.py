@@ -76,6 +76,12 @@ def calculate(subtotal, no_of_signs, sign_permit, engineering, other_fees, disco
     return total
 
 
+def calculatePercentage(deposit_percentage):
+    completion_percentage = 100 - deposit_percentage
+
+    return completion_percentage
+
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def addProject(request):
@@ -83,7 +89,7 @@ def addProject(request):
     if request.method == 'POST':
         form_copy = request.POST.copy()
         # get data used to calculate total
-        subtotal = int(form_copy['subtotal'])
+
         number_of_signs = int(form_copy['number_of_signs'])
         sign_permit = int(form_copy['sign_permit'])
         engineering = int(form_copy['engineering'])
@@ -95,9 +101,29 @@ def addProject(request):
         discount_total = int(form_copy['discount_total'])
         deposit_amount = int(form_copy['deposit_amount'])
         completion_amount = int(form_copy['completion_amount'])
+        # calculate percentage
+        deposit_percentage = int(form_copy['deposit_percentage'])
+        form_copy['completion_percentage'] = 100 - deposit_percentage
+        # calculate total sign price as subtotal
+        sum = 0
+        for i in range(number_of_signs):
+            i += 1
+            sign_order = 'mysign-' + str(i)
+            sum += int(form_copy[sign_order])
+        form_copy['subtotal'] = sum
+        subtotal = int(form_copy['subtotal'])
+
         # calculate total price
-        form_copy['final_total'] = calculate(
-            subtotal, number_of_signs, sign_permit, engineering, other_fees, discount, cash_discount)
+        form_copy['final_total'] = subtotal
+        # form_copy['final_total'] = calculate(
+        #     subtotal, number_of_signs, sign_permit, engineering, other_fees, discount, cash_discount)
+        form_copy['deposit_amount'] = (form_copy['final_total'] - (form_copy['final_total'] *
+                                                                   form_copy['completion_percentage'] * .01))
+
+        form_copy['completion_amount'] = (form_copy['final_total'] -
+                                          form_copy['deposit_amount'])
+
+        print('Sum..........', sum)
         form = ProjectForm(form_copy)
         print(request.POST)
         if form.is_valid():

@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-    <link href="./css/form-validation.css" rel="stylesheet">
-     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    {% comment %} <link href="./css/form-validation.css" rel="stylesheet">
+     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> {% endcomment %}
 
   <!-- Custom styles for this template -->
-    <link href="css/heroic-features.css" rel="stylesheet">
+    {% comment %} <link href="css/heroic-features.css" rel="stylesheet"> {% endcomment %}
     <link rel="stylesheet" href="./css/index.css">
     <title>Project-Manager</title>
 </head>
@@ -45,6 +45,31 @@
     
       <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  {% comment %} <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> {% endcomment %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type='text/javascript'>
+        $(document).ready(function() {
+            let max_fields = 10;
+            let wrapper = $(".container1");
+            let add_button = $(".add_form_field");
+
+            let x = 1;
+            $(add_button).click(function(e) {
+                e.preventDefault();
+                if (x < max_fields) {
+                    x++;
+                    $(wrapper).append(`<div><input id="sign-${x} "type="text" name="mytext-${x}" placeholder="Sign Name"/><input id="price-${x} "type="number" name="mysign-${x}" placeholder="Sign Price"/><a href="#" class="delete">Delete</a></div>`); //add input box
+                } else {
+                    alert('You Reached the limits')
+                }
+            });
+
+            $(wrapper).on("click", ".delete", function(e) {
+                e.preventDefault();
+                $(this).parent('div').remove();
+                x--;
+            })
+        });
+</script>
 </body>
 </html>
