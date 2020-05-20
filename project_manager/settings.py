@@ -80,8 +80,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'demo_1',
         'USER': 'joshgarza',
-        'PASSWORD': 'Bentley2019!',
-        'HOST': 'database-1.cwvlklwzmeaa.us-east-2.rds.amazonaws.com',
+        'PASSWORD': 'porschegt3rs',
+        'HOST': 'database-2.cwvlklwzmeaa.us-east-2.rds.amazonaws.com',
+        # 'HOST': 'database-1.cwvlklwzmeaa.us-east-2.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -128,4 +129,3 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'project_manager/static')
 ]
-

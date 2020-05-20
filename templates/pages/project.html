@@ -21,6 +21,10 @@
                 <td>{{project.number_of_signs}}</td>
             </tr>
             <tr>
+                 <th>Sign Details</th>
+                <td>{{project.sign_details}}</td>
+            </tr>
+            <tr>
                 <th>Subotal</th>
                     <td>{{project.subtotal}}</td>
             </tr>
@@ -96,13 +100,20 @@
             </tr>
             <tr>
                 <th>Artwork Approved</th>
-                <td>{{project.artwork_approved}}</td>
+                {% if project.artwork_approved == False %}
+                    <td>No</td>
+                {% else %}
+                    <td>Yes</td>
+                {% endif %}
                 
             </tr>
             <tr>
                 <th>Contract Approved</th>
-                <td>{{project.contract_approved}}</td>
-                
+                {% if project.contract_approved == False %}
+                    <td>No</td>
+                {% else %}
+                    <td>Yes</td>
+                {% endif %}
             </tr>
             <tr>
                 <th>Legal Description</th>
@@ -151,6 +162,11 @@
             <tr>
                 <th>Special Colors/Materials</th>
                 <td>{{project.special_colors_materials}}</td>
+                
+            </tr>
+            <tr>
+                <th>Important Links</th>
+                <td>{{project.external_links}}</td>
                 
             </tr>
         </tbody>

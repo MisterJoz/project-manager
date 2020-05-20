@@ -14,7 +14,7 @@ from .forms import ProjectForm, ContactForm, CreateUserForm
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 def index(request):
     projects = Project.objects.all().order_by('-intial_date')
     context = {
@@ -44,7 +44,7 @@ def register(request):
     return render(request, 'pages/register.html', context)
 
 
-# @unauthenticated_user
+@unauthenticated_user
 def loginPage(request):
 
     if request.method == 'POST':
@@ -85,7 +85,7 @@ def calculatePercentage(deposit_percentage):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 def addProject(request):
     form = ProjectForm()
     if request.method == 'POST':
@@ -107,6 +107,8 @@ def addProject(request):
         deposit_percentage = int(form_copy['deposit_percentage'])
         form_copy['completion_percentage'] = 100 - deposit_percentage
         # calculate total sign price as subtotal
+
+        # calculate subtotal given sign price
         sum = 0
         for i in range(number_of_signs):
             i += 1
@@ -114,6 +116,13 @@ def addProject(request):
             sum += int(form_copy[sign_order])
         form_copy['subtotal'] = sum
         subtotal = int(form_copy['subtotal'])
+
+        # if discount %, discount total = disocunt * subtotal
+        # if cash discount, discount total = subtotal - cash discount
+        if discount:
+            form_copy['discount_total'] = discount * subtotal
+        elif cash_discount:
+            form_copy['discount_total'] = cash_discount
 
         # calculate total price
         # form_copy['final_total'] = subtotal
@@ -139,7 +148,7 @@ def addProject(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 def addContact(request):
     form = ContactForm()
     if request.method == 'POST':
@@ -170,7 +179,7 @@ def contact(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 def updateProject(request, pk):
     project = Project.objects.get(id=pk)
     print('Project...', project)
@@ -189,7 +198,7 @@ def updateProject(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 def deleteProject(request, pk):
     project = Project.objects.get(id=pk)
     if request.method == "POST":

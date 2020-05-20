@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime, date
+from django import forms
 from django.db import models
 from phone_field import PhoneField
 from django.utils import timezone
@@ -29,22 +30,23 @@ class Project(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     contact_id = models.ForeignKey(
         Contact, null=True, on_delete=models.SET_NULL)
-    number_of_signs = models.IntegerField(null=True, blank=True, default=0)
-    subtotal = models.IntegerField(null=True, blank=True, default=0)
-    sign_permit = models.IntegerField(null=True, blank=True, default=0)
-    engineering = models.IntegerField(null=True, blank=True, default=0)
-    other_fees = models.IntegerField(null=True, blank=True, default=0)
+    number_of_signs = models.FloatField(null=True, blank=True, default=0)
+    sign_details = models.TextField(null=True, blank=True)
+    subtotal = models.FloatField(null=True, blank=True, default=0)
+    sign_permit = models.FloatField(null=True, blank=True, default=0)
+    engineering = models.FloatField(null=True, blank=True, default=0)
+    other_fees = models.FloatField(null=True, blank=True, default=0)
     discount = models.FloatField(null=True, blank=True, default=0)
-    cash_discount = models.IntegerField(null=True, blank=True, default=0)
-    discount_total = models.IntegerField(null=True, blank=True, default=0)
-    final_total = models.IntegerField(null=True, blank=True, default=0)
-    deposit_percentage = models.IntegerField(null=True, blank=True, default=0, validators=[
-                                             MaxValueValidator(100), MinValueValidator(0)])
-    deposit_amount = models.IntegerField(null=True, blank=True, default=0)
-    completion_percentage = models.IntegerField(
+    cash_discount = models.FloatField(null=True, blank=True, default=0)
+    discount_total = models.FloatField(null=True, blank=True, default=0)
+    final_total = models.FloatField(null=True, blank=True, default=0)
+    deposit_percentage = models.FloatField(null=True, blank=True, default=0, validators=[
+        MaxValueValidator(100), MinValueValidator(0)])
+    deposit_amount = models.FloatField(null=True, blank=True, default=0)
+    completion_percentage = models.FloatField(
         null=True, blank=True, default=0, validators=[
             MaxValueValidator(100), MinValueValidator(0)])
-    completion_amount = models.IntegerField(null=True, blank=True, default=0, )
+    completion_amount = models.FloatField(null=True, blank=True, default=0, )
     intial_date = models.DateField(
         default=timezone.now, auto_now_add=False, auto_now=False, blank=True)
     survey_date = models.DateField(null=True,
@@ -72,6 +74,11 @@ class Project(models.Model):
         default=timezone.now, auto_now_add=False, auto_now=False, null=True, blank=True)
     job_description = models.TextField(null=True, blank=True)
     special_colors_materials = models.TextField(null=True, blank=True)
+    external_links = models.TextField(
+        null=True,
+        blank=True,
+
+    )
 
     def __str__(self):
         return self.name
