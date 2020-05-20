@@ -8,6 +8,7 @@ urlpatterns = [
     path('logout/', views.logoutUser, name='logout'),
     path('add_project_form/', views.addProject, name='add_project'),
     path('project/<str:pk>/', views.project, name='project'),
+    path('contact/<str:pk>/', views.contact, name='contact'),
     path('update_project_form/<str:pk>/',
          views.updateProject, name='update_project'),
     path('delete/<str:pk>/',

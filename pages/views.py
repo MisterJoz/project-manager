@@ -16,7 +16,7 @@ from .forms import ProjectForm, ContactForm, CreateUserForm
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def index(request):
-    projects = Project.objects.all()
+    projects = Project.objects.all().order_by('-intial_date')
     context = {
         'projects': projects,
     }
@@ -70,9 +70,11 @@ def logoutUser(request):
 def calculate(subtotal, no_of_signs, sign_permit, engineering, other_fees, discount, cash_discount):
     total = subtotal + (sign_permit * no_of_signs) + engineering + other_fees
     if discount > 0:
-        total = total * discount
+        total -= total * discount
     elif cash_discount > 0:
         total -= cash_discount
+    else:
+        return total
     return total
 
 
@@ -114,9 +116,10 @@ def addProject(request):
         subtotal = int(form_copy['subtotal'])
 
         # calculate total price
-        form_copy['final_total'] = subtotal
-        # form_copy['final_total'] = calculate(
-        #     subtotal, number_of_signs, sign_permit, engineering, other_fees, discount, cash_discount)
+        # form_copy['final_total'] = subtotal
+        form_copy['final_total'] = calculate(
+            subtotal, number_of_signs, sign_permit, engineering, other_fees, discount, cash_discount)
+
         form_copy['deposit_amount'] = (form_copy['final_total'] - (form_copy['final_total'] *
                                                                    form_copy['completion_percentage'] * .01))
 
@@ -152,8 +155,18 @@ def addContact(request):
 
 def project(request, pk):
     project = Project.objects.get(id=pk)
-    context = {'project': project, }
+    contact = Contact.objects.get(client=project.contact_id)
+    print(project)
+    print(contact)
+    context = {'project': project, 'contact': contact}
+
     return render(request, 'pages/project.html', context)
+
+
+def contact(request, pk):
+    contact = Contact.objects.get(client=pk)
+    context = {'contact': contact}
+    return render(request, 'pages/contact.html', context)
 
 
 @login_required(login_url='login')
