@@ -13,7 +13,7 @@ from .forms import ProjectForm, ContactForm, CreateUserForm
 # Create your views here.
 
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 # @allowed_users(allowed_roles=['admin'])
 def index(request):
     projects = Project.objects.all().order_by('-intial_date')
